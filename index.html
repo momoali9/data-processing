@@ -1,16 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
  <head>
-     <title>Looping Forms</title>
+     <title>Data Processing</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/nav.css">
   <link rel="stylesheet" href="css/forms.css">
+  <style>
+    #widgets {
+        max-width:600px;
+        margin:5px;
+        padding:2px;
+    }
+    #widgets > div {
+        padding:5px;
+        min-height:80px;
+        margin-bottom:5px;
+        border:1px solid #ccc;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        position:relative; /* required to place #pic to right */
+    }
+    div.pic img{
+        position:absolute;
+        right:10px;
+        top:10px;
+        max-width:75px;
+    }
+    </style>
  </head>
  <body>
      <header>
-     <h1 class="page-header">Looping Forms</h1>
+     <h1 class="page-header">Data Processing</h1>
         <nav class="topnav" id="myTopnav">
             <a href="index.html" class="active">Home</a>
             <a href="javascript:void(0);" class="icon" onclick="myFunction()">&#9776;</a>
@@ -19,9 +42,34 @@
      
    <main class="wrapper">
  
-    <h2 class="subheader">Shipping Info</h2>
+    <h2 class="subheader">Buy our Widgets!</h2>
     <div id="output">
     <form method="get" action="" class="main-form">
+      <h3>Here are our Widgets, etc.</h3>
+      <div id="widgets">
+        <div>
+            <b>Widget</b><br />
+            <p>Our Widgets are spring loaded and need no batteries!</p>
+            <p>At $3.99 they're a bargain!</p>
+            <p><label><input type="checkbox" name="Cart" value="Widget"> Add to Cart</label></p>
+            <div class="pic"><img src="images/widget.png" /></div>
+        </div>
+        <div>
+            <b>Sprocket</b><br />
+            <p>Our Sprockets are well made and hold up to extreme pressure!</p>
+            <p>They only cost $5.99!</p>
+            <p><label><input type="checkbox" name="Cart" value="Sprocket"> Add to Cart</label></p>
+            <div class="pic"><img src="images/sprocket.png" /></div>
+        </div>
+        <div>
+            <b>Thingy</b><br />
+            <p>Our Thingys have many uses, and people come up with new ones all the time!</p>
+            <p>Such a deal at $1.99!</p>
+            <p><label><input type="checkbox" name="Cart" value="Thingy"> Add to Cart</label></p>
+            <div class="pic"><img src="images/thingy.png" /></div>
+        </div>
+    </div>
+      <h3>Shipping Info</h2>
       <div>
         <label for="FirstName">First Name</label><br>
         <input type="text" name="First_Name" id="FirstName" placeholder="First Name" required autofocus>
@@ -66,6 +114,7 @@
     </form>
   </div>
     <footer>
+      <p>In this page the user will get feedback including the names of the items added to the cart, plus the total cost.</p>
       <p><small>&copy; 2021-<span id="this-year"></span> by 
           Mohammed Ali, All Rights Reserved ~ 
           <a id="html-checker" href="#" target="_blank">Check HTML</a> ~ 
@@ -89,8 +138,32 @@
 
       if(queryString.length > 0){//data submitted 
           let myOutput = `<div id="container">`;
+          let myCart = "";
+          let myTotal = 0;
+          let myShipping = "";
 
             urlParams.forEach(function(value,key){
+
+             if(key == "Cart"){//cart
+                //alert(value);
+                switch(value){
+                  case "Widget":
+                    myCart += `Widget: $3.99<br>`;
+                    myTotal += 3.99;
+                  break;
+
+                  case "Sprocket":
+                    myCart += `Sprocket: $5.99<br>`;
+                    myTotal += 5.99;
+                  break;
+
+                  case "Thingy":
+                    myCart += `Thingy: $1.99<br>`;
+                    myTotal += 1.99;
+                  break;
+                }
+
+             }else{//shipping
 
               key = key.split("_").join(" ");
 
@@ -105,8 +178,17 @@
                 break;
               }
 
-              myOutput += `<p>${key}: ${value}</p>`;
+              myShipping += `<p>${key}: ${value}</p>`;
+
+             }
+            
             });
+
+            myCart = `<h3>Cart Totals</h3>
+            <p>${myCart}</p>
+            <p>Total: $${myTotal}</p>`;
+
+          myOutput += myCart + '<h3>Shipping Info</h3>' + myShipping;
           myOutput += `<p><a href="index.html">CLEAR</a></p>`;
           myOutput += `</div>`;
           document.querySelector("#output").innerHTML = myOutput;
